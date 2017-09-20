@@ -1,0 +1,15 @@
+Teach -R A = "a"
+Teach -R B = "B"
+Teach -L C = "c"
+Teach -L D = "D"
+Teach -L E = "E"
+Teach -L long = "longtestname"
+Teach -L long2 = "otherlongname"
+Teach A = true
+Teach A|B -> C
+Teach !(!(A&B)&!(long|long2)) -> E
+Learn
+List
+Teach !(A&long) -> long2
+Learn
+List

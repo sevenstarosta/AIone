@@ -35,10 +35,14 @@ def learn():
     for i in roots.keys():
         if roots[i][1]:
             facts[i]=roots[i][0]
-    for i,j in rules:
-        if forwardCheck(i):
+    k=0
+    while k < len(rules):
+        i,j = rules[k]
+        if forwardCheck(i) and j not in facts.keys():
             facts[j]=learned[j][0]
             learned[j][1]=True
+            k=0
+        k+=1
         #verify if conditions of i met.
 
 def forwardCheck(expr):
