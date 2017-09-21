@@ -41,7 +41,7 @@ def learn():
         if forwardCheck(i) and j not in facts.keys():
             facts[j]=learned[j][0]
             learned[j][1]=True
-            k=0
+            k=-1
         k+=1
         #verify if conditions of i met.
 
@@ -63,7 +63,11 @@ def forwardCheck(expr):
             return forwardCheck(expr[1:i-1]) or forwardCheck(expr[i+2:])
     if (expr.find('(') > 0):
         if expr[expr.find('(')-1] == '!':
-            return not forwardCheck(expr[expr.find('('):])
+            "( is not in 0 spot. Therefore..."
+            if (expr.find('!')==0):
+                #must check for after as well...
+                return not forwardCheck(expr[expr.find('('):])
+            elif (expr)
         elif expr[expr.find('(')-1] == '&':
             return forwardCheck(expr[:expr.find('(')-1]) and forwardCheck(expr[expr.find('('):])
         elif expr[expr.find('(')-1] == '|':
