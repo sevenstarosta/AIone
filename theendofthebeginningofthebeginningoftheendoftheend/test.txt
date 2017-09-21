@@ -11,6 +11,5 @@ Teach !(!(A&B)&!(long|long2)) -> E
 Learn
 List
 Teach !(A&long) -> long2
-Learn
-Learn
 List
+Query E

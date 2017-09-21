@@ -141,8 +141,114 @@ def forwardCheck(expr):
             c = operands.pop()
             operands.append(b or c)
     return operands[0]
+
+def backward(expr):
+    operands = []
+    operators = []
+    while len(expr) > 0:
+        'First find out if start is identifier/operand. if is, then add to operands'
+        i = 0
+        while (i < len(expr) and expr[i] not in ['(',')','&','|','!']):
+            i+=1
+        if i > 0: #Then there is an operand to be added to the stack.
+            oper = expr[:i]
+            if oper in roots.keys() and roots[oper][1]:
+                operands.append(True)
+            else:
+                val = False
+                for rule,result in rules:
+                    if result == oper:
+                        val = val or backward(rule)
+                operands.append(val)
+            if len(expr) > i:
+                expr = expr[i:]
+            else:
+                expr = ""
+        else: #Then the remainder is an operator or ()
+            if expr[0] == '(':
+                operators.append('(')
+            elif expr[0] == '!':
+                while (len(operators) > 0 and operators[-1] not in ['(',')','&','|']):
+                    a = operators.pop()
+                    if a == '!':
+                        b = operands.pop()
+                        oparands.append(not b)
+                    elif a == '&':
+                        b = operands.pop()
+                        c = operands.pop()
+                        operands.append(b and c)
+                    elif a == '|':
+                        b = operands.pop()
+                        c = operands.pop()
+                        operands.append(b or c)
+                operators.append('!')
+            elif expr[0] == '&':
+                while (len(operators) > 0 and operators[-1] not in ['(',')','|']):
+                    a = operators.pop()
+                    if a == '!':
+                        b = operands.pop()
+                        operands.append(not b)
+                    elif a == '&':
+                        b = operands.pop()
+                        c = operands.pop()
+                        operands.append(b and c)
+                    elif a == '|':
+                        b = operands.pop()
+                        c = operands.pop()
+                        operands.append(b or c)
+                operators.append('&')
+            elif expr[0] == '|':
+                while (len(operators) > 0 and operators[-1] not in ['(',')']):
+                    a = operators.pop()
+                    if a == '!':
+                        b = operands.pop()
+                        operands.append(not b)
+                    elif a == '&':
+                        b = operands.pop()
+                        c = operands.pop()
+                        operands.append(b and c)
+                    elif a == '|':
+                        b = operands.pop()
+                        c = operands.pop()
+                        operands.append(b or c)
+                operators.append('|')
+            elif expr[0] == ')':
+                while (len(operators) > 0 and operators[-1] not in ['(']):
+                    a = operators.pop()
+                    if a == '!':
+                        b = operands.pop()
+                        operands.append(not b)
+                    elif a == '&':
+                        b = operands.pop()
+                        c = operands.pop()
+                        operands.append(b and c)
+                    elif a == '|':
+                        b = operands.pop()
+                        c = operands.pop()
+                        operands.append(b or c)
+                operators.pop()
+            if len(expr) > 1:
+                expr = expr[1:]
+            else:
+                expr = ""
+    while(len(operators) > 0):
+        a = operators.pop()
+        if a == '!':
+            b = operands.pop()
+            operands.append(not b)
+        elif a == '&':
+            b = operands.pop()
+            c = operands.pop()
+            operands.append(b and c)
+        elif a == '|':
+            b = operands.pop()
+            c = operands.pop()
+            operands.append(b or c)
+    return operands[0], []
+
 def query(variable):
-    pass
+    value, explanation = backward(variable)
+    print(str(value[0]))
 
 def why(variable):
     pass
@@ -164,6 +270,7 @@ def list():
     print("Rules: ")
     for i,j in rules:
         print ("     " + i + " -> " + j)
+    print ("\n")
 
 while (True):
     myInput = input("Enter: ")
@@ -184,6 +291,6 @@ while (True):
     if sInput[0] == "Learn":
         learn()
     if sInput[0] == "Query":
-        query(sInput(1))
+        query(sInput[1])
     if sInput[0] == "Why":
-        why(sInput(1))
+        why(sInput[1])
