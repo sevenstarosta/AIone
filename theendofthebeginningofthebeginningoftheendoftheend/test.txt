@@ -1,15 +1,16 @@
-Teach -R A = "a"
-Teach -R B = "B"
-Teach -L C = "c"
-Teach -L D = "D"
-Teach -L E = "E"
-Teach -L long = "longtestname"
-Teach -L long2 = "otherlongname"
+Teach -R A = "af"
+Teach -R B = "bf"
+Teach -L C = "cf"
+Teach -L D = "df"
+Teach -L E = "ef"
+Teach -L long = "lf"
+Teach -L long2 = "lf2"
 Teach A = true
 Teach A|B -> C
-Teach !(!(A&B)&!(long|long2)) -> E
+Teach (!(A&B)&!(long|long2)) -> E
 Learn
 List
 Teach !(A&long) -> long2
 List
-Query E
+Learn
+Why E
