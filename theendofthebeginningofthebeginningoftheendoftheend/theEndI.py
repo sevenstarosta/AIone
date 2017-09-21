@@ -48,8 +48,24 @@ def exprToNames(expr):
     expr2 = ""
     i = 0
     while i < len(expr):
-        if expr[i] not in ['1','2']:
-            return 0
+        if expr[i] not in ['(',')','&','|','!']:
+            j=i
+            while j < len(expr) and expr[j] not in ['(',')','&','|','!']:
+                j+=1
+            if expr[i:j] in roots.keys():
+                expr2 = expr2 + roots[expr[i:j]][0]
+            elif expr[i:j] in learned.keys():
+                expr2 = expr2 + learned[expr[i:j]][0]
+            i=j-1
+        elif expr[i] in ['(',')']:
+            expr2 = expr2 + expr[i]
+        elif expr[i] == '&':
+            expr2 = expr2 + " AND "
+        elif expr[i] == '!':
+            expr2 = expr2 + " NOT "
+        elif expr[i] == '|':
+            expr2 = expr2 + " OR "
+        i+=1
     return expr2
 
 def forwardCheck(expr):
@@ -173,12 +189,12 @@ def backward(expr):
                 temp = []
                 lastRule =""
                 for rule,result in rules:
-                    lastRule = rule
                     if result == oper:
+                        lastRule = rule
                         val = val or backward(rule)[0]
                         temp = backward(rule)[1]
                         if val:
-                            answer.append("BEACAUSE " + rule + " I KNOW THAT " + learned[oper][0])
+                            answer.append("BECAUSE " + exprToNames(rule) + " I KNOW THAT " + learned[oper][0])
                             answer= temp + answer
                             break
                 operands.append(val)
@@ -188,7 +204,7 @@ def backward(expr):
                         answer.append("I KNOW THAT IT IS NOT TRUE THAT "+ learned[oper][0])
                         answer= temp + answer
                     else:
-                        answer.append("BECAUSE " + lastRule + " I KNOW THAT NOT " + learned[oper][0])
+                        answer.append("BECAUSE I CANNOT SAY THAT " + exprToNames(lastRule) + " I KNOW THAT NOT " + learned[oper][0])
                         answer= temp + answer
             if len(expr) > i:
                 expr = expr[i:]
@@ -204,7 +220,7 @@ def backward(expr):
                         b = operands.pop()
                         operands.append(not b)
                         temp=identifiers.pop()
-                        identifiers.append(" NOT " + temp)
+                        identifiers.append("NOT " + temp)
                     elif a == '&':
                         b = operands.pop()
                         c = operands.pop()
@@ -227,7 +243,7 @@ def backward(expr):
                         b = operands.pop()
                         operands.append(not b)
                         temp=identifiers.pop()
-                        identifiers.append(" NOT " + temp)
+                        identifiers.append("NOT " + temp)
                     elif a == '&':
                         b = operands.pop()
                         c = operands.pop()
@@ -250,7 +266,7 @@ def backward(expr):
                         b = operands.pop()
                         operands.append(not b)
                         temp=identifiers.pop()
-                        identifiers.append(" NOT " + temp)
+                        identifiers.append("NOT " + temp)
                     elif a == '&':
                         b = operands.pop()
                         c = operands.pop()
@@ -273,7 +289,7 @@ def backward(expr):
                         b = operands.pop()
                         operands.append(not b)
                         temp=identifiers.pop()
-                        identifiers.append(" NOT " + temp)
+                        identifiers.append("NOT " + temp)
                     elif a == '&':
                         b = operands.pop()
                         c = operands.pop()
@@ -301,7 +317,7 @@ def backward(expr):
             b = operands.pop()
             operands.append(not b)
             temp=identifiers.pop()
-            identifiers.append(" NOT " + temp)
+            identifiers.append("NOT " + temp)
         elif a == '&':
             b = operands.pop()
             c = operands.pop()
