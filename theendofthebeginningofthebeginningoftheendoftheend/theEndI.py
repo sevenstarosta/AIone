@@ -1,7 +1,7 @@
 '''
 Timothy Davison and Seven Starosta
-Yeeeeeeeeeeahhhhhhh boiiiiiii
-9-17-2017
+tfd2xq sbs3bx
+AI Homework 1
 '''
 
 # Attributes
@@ -182,7 +182,7 @@ def backward(expr):
                 answer.append("I KNOW THAT IT IS TRUE THAT " + roots[oper][0])
             elif oper in roots.keys():
                 operands.append(False)
-                identifiers.append("NOT" + roots[oper][0])
+                identifiers.append("NOT " + roots[oper][0])
                 answer.append("I KNOW THAT IT IS NOT TRUE THAT " + roots[oper][0])
             else:
                 val = False
@@ -204,7 +204,7 @@ def backward(expr):
                         answer.append("I KNOW THAT IT IS NOT TRUE THAT "+ learned[oper][0])
                         answer= temp + answer
                     else:
-                        answer.append("BECAUSE I CANNOT SAY THAT " + exprToNames(lastRule) + " I KNOW THAT NOT " + learned[oper][0])
+                        answer.append("BECAUSE I CANNOT SAY THAT " + exprToNames(lastRule) + " I CANNOT PROVE " + learned[oper][0])
                         answer= temp + answer
             if len(expr) > i:
                 expr = expr[i:]
@@ -340,32 +340,33 @@ def backward(expr):
 
 def query(variable):
     value, explanation = backward(variable)
-    print(str(value[0]))
+    print(str(value[0]).lower())
 
 def why(variable):
     value, explanation = backward(variable)
-    print (str(value))
+    print (str(value).lower())
     for line in explanation:
         print(line)
 
 def list():
     print ("Root Variables: ")
     for i in roots.keys():
-        "MUST REMOVE THE BOOLEAN AT THE END. JUST FOR TESTING."
-        print ("     " + i + " = \""+ roots[i][0]+ "\" " + str(roots[i][1]))
-    print ("\n")
+        if roots[i][1]:
+            print ("     " + i + " = \""+ roots[i][0]+ "\"")
+    print("\n")
     print ("Learned Variables: ")
     for i in learned.keys():
-        print ("     " + i + " = \"" + learned[i][0] + "\" " + str(learned[i][1]))
-    print ("\n")
+        if learned[i][1]:
+            print ("     " + i + " = \"" + learned[i][0] + "\"")
+    print("\n")
     print("Facts: ")
     for i in facts.keys():
-        print ("     " + i)
-    print ("\n")
+        print("     " + i)
+    print("\n")
     print("Rules: ")
     for i,j in rules:
-        print ("     " + i + " -> " + j)
-    print ("\n")
+        print("     " + i + " -> " + j)
+    print("\n")
 
 while (True):
     myInput = input(">")

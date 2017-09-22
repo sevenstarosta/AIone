@@ -7,10 +7,11 @@ Teach -L long = "lf"
 Teach -L long2 = "lf2"
 Teach A = true
 Teach A|B -> C
-Teach (!(A&B)&!(long|long2)) -> E
-Learn
-List
+Teach !(!(A&B)&!(long|long2)) -> E
 Teach !(A&long) -> long2
-List
+Teach (E|long)&(!A&(B)) -> D
 Learn
+List
 Why E
+Why D
+Why long
